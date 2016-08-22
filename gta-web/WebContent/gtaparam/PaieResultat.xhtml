@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="/template/MainContent.xhtml">
+	<ui:define name="Content">
+		<div class="col-lg-8">
+			<div>
+
+
+				<h:form id="form1">
+
+
+
+
+					<br />
+
+					<!-- WIDGET TABBED CONTENT -->
+
+
+				</h:form>
+
+				<div class="col-md-12">
+
+					<form>
+						
+
+
+						<p:dataTable id="journeetable">
+
+							<f:facet name="header">
+								<h:outputText value="Verification resultat" />
+
+								<br />
+								
+<br />
+
+
+								<p:commandButton icon="ui-icon-pencil"
+									onclick="PF('DialogModifJourneeType').show()"></p:commandButton>
+
+								<p:commandButton icon="ui-icon-plus"
+									onclick="PF('DialogAjoutJourneType').show()"></p:commandButton>
+
+								<p:commandButton icon="ui-icon-trash" ajax="true"
+									action="#{journeeTypeBean.supprimerJourneeType}"></p:commandButton>
+							</f:facet>
+
+							<p:column headerText="Matricle">
+								<h:outputText />
+							</p:column>
+
+							<p:column headerText="Nom">
+								<h:outputText />
+							</p:column>
+
+							<p:column headerText="Prenom">
+								<h:outputText />
+							</p:column>
+
+							<p:column headerText="Mois">
+								<h:outputText />
+							</p:column>
+						</p:dataTable>
+
+
+						<br /> <br /> <br />
+
+
+
+
+
+						<p:commandButton value="Population"></p:commandButton>
+						<br /> <br />
+						<p:commandButton value="Validation">
+						</p:commandButton>
+								<br /> <br />
+						<p:commandButton value="Editer les bulletins">
+						</p:commandButton>
+					</form>
+
+
+
+
+
+				</div>
+			</div>
+
+
+
+
+
+
+			<!-- ////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+			<!-- WIDGET TABBED CONTENT -->
+
+
+
+
+
+
+
+
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- 			//////////////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+
+	</ui:define>
+</ui:composition>
+</html>

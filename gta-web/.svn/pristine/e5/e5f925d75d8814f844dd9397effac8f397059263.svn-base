@@ -1,0 +1,550 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+		xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="/template/MainContent.xhtml">
+	<ui:define name="Content">
+
+		<h:form id="form1">
+
+
+			<!-- ////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+
+			<!-- 	<p:tabView id="tabview" style="height: 900px;width: 830px">  -->
+
+			<!-- WIDGET TABBED CONTENT -->
+
+			<div class="col-md-8">
+				<div class="widget">
+					<div class="widget-header-in">
+
+						<ul class="nav nav-tabs pull-right">
+							<li><button class="btn btn-default  btn-primary ">
+									<i class="fa fa-file-pdf-o"></i> Export to pdf
+								</button></li>
+							<li><button class="btn btn-default btn-primary ">
+									<i class="fa fa-print"></i> Print
+								</button></li>
+						</ul>
+
+						<ul class="nav nav-tabs">
+
+							<li><a href="#tab1" data-toggle="tab"><i
+									class="fa fa-user"></i> <span>List Pointages</span></a></li>
+
+
+						</ul>
+
+					</div>
+					<div class="widget-content">
+						<div class="tab-content no-padding">
+							<!-- 	<p:messages showDetail="true" autoUpdate="true" closable="true"
+								id="msg1" style="position: fixed; align: center; width: 65%" /> -->
+
+							<!-- 				/////////////// Activite saisie //////////// -->
+
+
+							<div class="tab-pane fade in active" id="tab1">
+								<p:panel id="pan1">
+
+									<p:dataTable id="dt1" value="#{pointageBean.pointages}"
+										var="act" selection="#{pointageBean.pointage}"
+										rowKey="#{act.idp}" selectionMode="single" style="border:0px;">
+
+										<f:facet name="header">
+
+
+											<p:commandButton icon="ui-icon-zoomin"
+												onclick="PF('dialogViewSc').show()"
+												update=":formDialogViewSc"></p:commandButton>
+											<p:commandButton icon="ui-icon-pencil"
+												onclick="PF('dialogEditSc').show()"
+												update=":formDialogEditSc"></p:commandButton>
+											<p:commandButton icon="ui-icon-plus"
+												onclick="PF('dialogAddplth').show()" ></p:commandButton>
+											<p:commandButton icon="ui-icon-trash"
+												action="#{activiteCalculerBean.supprimerActiviteSaisie()}"
+												ajax="true" update="dt1"></p:commandButton>
+												
+
+										</f:facet></p:dataTable>
+
+				<p:tab title="Par jour">
+					<pe:timeline id="timeline" value="#{planingCalculerBean.model}"
+						editable="true" eventMargin="10" eventMarginAxis="0"
+						locale="#{planingCalculerBean.locale}" start="#{planingCalculerBean.start}"
+						end="#{planingCalculerBean.end}" showNavigation="true"
+						showButtonNew="true" axisOnTop="true" stackEvents="true"
+						themable="false">
+										</pe:timeline>
+
+</p:tab>
+									
+
+									
+
+								</p:panel>
+
+							</div>
+
+
+							<!-- /////////////////////////: activite calcule ///////////////////////////// -->
+
+							<!-- 	end widget -->
+						</div>
+					</div>
+				</div>
+				<!-- END WIDGET TABBED CONTENT -->
+			</div>
+			<!-- 	</p:tabView>  -->
+
+		</h:form>
+
+
+
+
+
+
+
+
+		<!-- ////////////// employee       -->
+		<h:form id="form2">
+			<div class="col-md-4">
+
+				<div class="widget widget-table">
+					<div class="widget-header">
+						<h3>
+							<i class="fa fa-users"></i>Liste des collaborteurs
+						</h3>
+					</div>
+					<div class="widget-content">
+
+						<div class="input-group input-group-sm">
+							<h:form id="formSearch">
+								<h:outputLabel value="Matricule:" />
+								<p:inputText value="#{pointageBean.matricul}"
+									onkeypress="if (event.keyCode == 13) {onchange(); return false; }">
+									<p:ajax event="change"
+										listener="#{planingCalculerBean.chargerPointages()}"
+										update=":form2:eventsDT" />
+								</p:inputText>
+
+							</h:form>
+						</div>
+						<br />
+
+
+
+
+						<p:dataTable id="eventsDT" var="identite"
+							value="#{planingCalculerBean.identites}" selectionMode="single"
+							selection="#{planingCalculerBean.selectedIdentite}"
+							rowKey="#{identite.numedoss}">
+
+							<f:facet name="header"> List of Employers </f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{planingCalculerBean.onRowSelect}" update=":form1" />
+
+
+
+							<p:column headerText="Matricule">
+								<h:outputText value="#{identite.matricul}" />
+							</p:column>
+							<p:column headerText="Nom et Prénom">
+								<h:outputText value="#{identite.nom} #{identite.prenom}" />
+							</p:column>
+						</p:dataTable>
+					</div>
+
+				</div>
+			</div>
+
+		</h:form>
+
+
+
+
+
+
+
+		<!-- 		///////////////////////////////////////////////////////       -->
+
+		<p:dialog header="Intervalle calcule" widgetVar="datecalc"
+			height="200" modal="true" id="popup1">
+			<h:form id="calcule">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Date début de calcule" />
+					<p:calendar value="#{activiteCalculerBean.dateDebutCalcule}" />
+					<p:outputLabel value="Date Fin de calcule" />
+					<p:calendar value="#{activiteCalculerBean.dateFinCalcule}" />
+					<p:outputLabel value="Seulement les plages obligatoires" />
+					<p:selectBooleanCheckbox
+						value="#{activiteCalculerBean.horairesObligatoire}" />
+					<p:outputLabel value="Forcer les horaires de références" />
+					<p:selectBooleanCheckbox
+						value="#{activiteCalculerBean.horairesRef}" />
+					<p:commandButton value="Calculer"
+						action="#{activiteCalculerBean.calculeActiviteReel()}"
+						update=":form1" onclick="PF('datecalc').hide();"
+						actionListener="#{activiteCalculerBean.info()}" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+
+		<!-- 						/////////////////////////////////////////////////://///////////////////////////////////////////////////////   -->
+		<p:dialog header="Détails Activite Saisie" widgetVar="dialogViewSc"
+			resizable="false" width="350">
+			<h:form id="formDialogViewSc">
+				<h:panelGrid columns="2">
+
+
+					<p:outputLabel value="Date" />
+					<p:inputText
+						value="#{activiteCalculerBean.activiteReelSaisie.date}" />
+
+
+
+					<p:outputLabel value="Motif" />
+					<p:inputText
+						value="#{activiteCalculerBean.activiteReelSaisie.activitePresence.codeap}" />
+
+
+					<p:outputLabel value="Heure debut" />
+					<p:inputText
+						value="#{activiteCalculerBean.activiteReelSaisie.heuredeb}" />
+
+					<p:outputLabel value="Heure fin" />
+					<p:inputText
+						value="#{activiteCalculerBean.activiteReelSaisie.heurefin}" />
+
+
+					<p:outputLabel value="Durée" />
+					<p:inputText
+						value="#{activiteCalculerBean.getDuree(activiteCalculerBean.activiteReelSaisie.heurefin,activiteCalculerBean.activiteReelSaisie.heuredeb)}" />
+
+
+					<p:outputLabel value="Poids" />
+					<p:inputText
+						value="#{activiteCalculerBean.activiteReelSaisie.activitePresence.poids}" />
+
+
+
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+
+
+
+
+		<p:dialog header="Modifier Activite Saisie" widgetVar="dialogEditSc"
+			resizable="false" width="350">
+			<h:form id="formDialogEditSc">
+				<h:panelGrid>
+
+					<p:outputLabel value="Date " />
+					<p:calendar
+						value="#{pointageBean.pointage.date}"
+						placeholder="Date" />
+					<p:outputLabel value="Date Force" />
+					<p:calendar
+						value="#{pointageBean.pointage.dateForcee}"
+						placeholder="Date" />
+
+					<!-- 
+					<p:outputLabel value="Motif" />
+					<f:selectItem itemValue="Planing" itemLabel="Planing" />
+
+					<h:selectOneMenu
+						value="#{activiteCalculerBean.activitePresenceAjout}"
+						filter="true" effect="fade" filterMatchMode="startsWith" var="t"
+						panelStyle="width:180px" converter="#{activitePresenceConvertor}">
+						<f:selectItem itemLabel="Selectionner" itemValue="" />
+						<f:selectItems value="#{activiteCalculerBean.activitePresences}"
+							var="act" itemLabel="#{act.codeap}" itemValue="#{act}" />
+
+							 <f:selectItem itemValue="#{act.codeap}" itemLabel="#{act.codeap}" /> 
+
+						<p:column>
+							<h:outputText value="#{act.codeap}" />
+						</p:column>
+					</h:selectOneMenu>
+ -->
+
+					<p:outputLabel value="Heure reponse" />
+					<p:calendar
+						value="#{pointageBean.pointage.heurep}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure debut" />
+
+
+
+					<!-- 		<p:outputLabel value="Heure fin" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.heurefin}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure fin" /> -->
+
+					<!-- 
+					  <p:outputLabel value="Durée" />
+					<p:inputText
+						value="#{activiteCalculerBean.getDuree(activiteCalculerBean.activiteReelSaisieAjout.heurefin,activiteCalculerBean.activiteReelSaisieAjout.heuredeb)}" />
+  -->
+
+
+				</h:panelGrid>
+				<p:commandButton value="Sauvegarder" ajax="true"
+					action="#{pointageBean.UpdatePointage()}" 	update=":form1:pan1"
+					oncomplete="PF('dialogEditSc').hide()"></p:commandButton>
+			</h:form>
+		</p:dialog>
+
+
+
+
+
+		<p:dialog header="Ajouter Activite Saisie" widgetVar="dialogAddSc"
+			resizable="false" width="350">
+			<h:form id="formDialogAddSc">
+				<h:panelGrid>
+					<p:outputLabel value="Date " />
+					<p:calendar
+						value="#{pointageBean.date}"
+						placeholder="Date" />
+					<p:outputLabel value="Date Force" />
+					<p:calendar
+						value="#{pointageBean.dateForcee}"
+						placeholder="Date" />
+
+					<!-- 
+					<p:outputLabel value="Motif" />
+					<f:selectItem itemValue="Planing" itemLabel="Planing" />
+
+					<h:selectOneMenu
+						value="#{activiteCalculerBean.activitePresenceAjout}"
+						filter="true" effect="fade" filterMatchMode="startsWith" var="t"
+						panelStyle="width:180px" converter="#{activitePresenceConvertor}">
+						<f:selectItem itemLabel="Selectionner" itemValue="" />
+						<f:selectItems value="#{activiteCalculerBean.activitePresences}"
+							var="act" itemLabel="#{act.codeap}" itemValue="#{act}" />
+
+							 <f:selectItem itemValue="#{act.codeap}" itemLabel="#{act.codeap}" /> 
+
+						<p:column>
+							<h:outputText value="#{act.codeap}" />
+						</p:column>
+					</h:selectOneMenu>
+ -->
+
+					<p:outputLabel value="Heure reponse" />
+					<p:calendar
+						value="#{pointageBean.heurep}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure debut" />
+
+
+
+					<!-- 		<p:outputLabel value="Heure fin" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.heurefin}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure fin" /> -->
+
+					<!-- 
+					  <p:outputLabel value="Durée" />
+					<p:inputText
+						value="#{activiteCalculerBean.getDuree(activiteCalculerBean.activiteReelSaisieAjout.heurefin,activiteCalculerBean.activiteReelSaisieAjout.heuredeb)}" />
+  -->
+
+
+				</h:panelGrid>
+				<p:commandButton value="Sauvegarder" ajax="true"
+					action="#{pointageBean.ajoutPointage()}"
+					update=":form1:pan1" oncomplete="PF('dialogAddSc').hide()">
+
+
+				</p:commandButton>
+			</h:form>
+		</p:dialog>
+
+
+
+
+		<!-- 			//////////////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+		<!-- dialog add absences -->
+
+		<p:dialog header="Ajouter Activite Saisie" widgetVar="dialogAddAB"
+			resizable="false" width="350">
+			<h:form id="formdialogAddAB">
+				<h:panelGrid>
+
+					<p:outputLabel value="Date" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.date}"
+						placeholder="Date" />
+
+
+					<p:outputLabel value="Motif" />
+					<f:selectItem itemValue="Planing" itemLabel="Planing" />
+
+					<h:selectOneMenu
+						value="#{activiteCalculerBean.activitePresenceAjout}"
+						filter="true" effect="fade" filterMatchMode="startsWith" var="t"
+						panelStyle="width:180px" converter="#{activitePresenceConvertor}">
+						<f:selectItem itemLabel="Selectionner" itemValue="" />
+						<f:selectItems value="#{activiteCalculerBean.activitePresences}"
+							var="act" itemLabel="#{act.codeap}" itemValue="#{act}" />
+
+						<!-- 	 <f:selectItem itemValue="#{act.codeap}" itemLabel="#{act.codeap}" />  -->
+
+						<p:column>
+							<h:outputText value="#{act.codeap}" />
+						</p:column>
+					</h:selectOneMenu>
+
+
+					<p:outputLabel value="Heure debut" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.heuredeb}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure debut" />
+
+
+
+					<p:outputLabel value="Heure fin" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.heurefin}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure fin" />
+
+					<!-- 
+					  <p:outputLabel value="Durée" />
+					<p:inputText
+						value="#{activiteCalculerBean.getDuree(activiteCalculerBean.activiteReelSaisieAjout.heurefin,activiteCalculerBean.activiteReelSaisieAjout.heuredeb)}" />
+  -->
+
+
+				</h:panelGrid>
+				<p:commandButton value="Sauvegarder" ajax="true"
+					action="#{activiteCalculerBean.ajoutActiviteSaisie()}"
+					update=":form1:pan1" oncomplete="PF('dialogAddSc').hide()">
+
+
+				</p:commandButton>
+			</h:form>
+		</p:dialog>
+
+		<!-- End dialog add absences -->
+		
+<!-- dialog   add planinig theorique-->
+		<p:dialog header="ajouter planing theorique" widgetVar="dialogAddplth"
+			resizable="false" width="350">
+			<h:form id="formDialogplth">
+				<p:outputLabel value="Heure debut" />
+					<p:calendar
+						value="#{planingCalculerBean.heurep}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure debut" />
+						
+							<p:outputLabel value="Heure fin" />
+					<p:calendar
+						value="#{planingCalculerBean.heurfin}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure debut" />
+						
+				<h:panelGrid>
+					<p:outputLabel value="Date " />
+					<p:calendar
+						value="#{planingCalculerBean.dateEffet}"
+						placeholder="Date" />
+					<!-- <p:outputLabel value="Date Fin" />
+					<p:calendar
+						value="#{occurenceBean.dateFin}"
+						placeholder="Date" /> -->
+		<!-- 			    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+        <h:outputText value="Soumis au GTA " />
+        <p:selectBooleanCheckbox value="#{occurenceBean.soumisGta}" /></h:panelGrid>
+        
+ <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+        <p:outputLabel for="console" value="Type de gestion" />
+        <p:selectOneRadio id="console" value="#{occurenceBean.natureHeure}">
+            <f:selectItem itemLabel="Heure" itemValue="Heure" />
+            <f:selectItem itemLabel="Durée" itemValue="Heure" />
+         
+        </p:selectOneRadio>
+    </h:panelGrid>
+       <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+        <h:outputText value="Saisir Pointage " />
+        <p:selectBooleanCheckbox value="#{occurenceBean.saisirPointage}" /></h:panelGrid> -->
+					<!-- 
+					<p:outputLabel value="Motif" />
+					<f:selectItem itemValue="Planing" itemLabel="Planing" />
+
+					<h:selectOneMenu
+						value="#{activiteCalculerBean.activitePresenceAjout}"
+						filter="true" effect="fade" filterMatchMode="startsWith" var="t"
+						panelStyle="width:180px" converter="#{activitePresenceConvertor}">
+						<f:selectItem itemLabel="Selectionner" itemValue="" />
+						<f:selectItems value="#{activiteCalculerBean.activitePresences}"
+							var="act" itemLabel="#{act.codeap}" itemValue="#{act}" />
+
+							 <f:selectItem itemValue="#{act.codeap}" itemLabel="#{act.codeap}" /> 
+
+						<p:column>
+							<h:outputText value="#{act.codeap}" />
+						</p:column>
+					</h:selectOneMenu>
+ -->
+
+			
+
+
+
+					<!-- 		<p:outputLabel value="Heure fin" />
+					<p:calendar
+						value="#{activiteCalculerBean.activiteReelSaisieAjout.heurefin}"
+						pattern="HH:mm:ss" timeOnly="true" placeholder="Heure fin" /> -->
+
+					<!-- 
+					  <p:outputLabel value="Durée" />
+					<p:inputText
+						value="#{activiteCalculerBean.getDuree(activiteCalculerBean.activiteReelSaisieAjout.heurefin,activiteCalculerBean.activiteReelSaisieAjout.heuredeb)}" />
+  -->
+
+
+				</h:panelGrid>
+				<h:panelGrid>
+					<p:outputLabel value="Plage Horaire" />
+					<f:selectItem itemValue="Planing" itemLabel="Planing" />
+
+					<h:selectOneMenu
+						value="#{planingCalculerBean.plageHoraireAjout}"
+						filter="true" effect="fade" filterMatchMode="startsWith" var="t"
+						panelStyle="width:180px" converter="#{plageHoraireConverter}">
+						<f:selectItem itemLabel="Selectionner" itemValue="" />
+						<f:selectItems value="#{planingCalculerBean.plageHorairess}"
+							var="act" itemLabel="#{act.codeph}" itemValue="#{act}" />
+
+						<!-- 	 <f:selectItem itemValue="#{act.codeap}" itemLabel="#{act.codeap}" />  -->
+
+						<h:column>
+							<h:outputText value="#{act.codeph}" />
+						</h:column>
+					</h:selectOneMenu>
+					</h:panelGrid>
+					
+				<p:commandButton value="Ajouter" ajax="true"
+					action="#{planingCalculerBean.AjouterPlanigthorique()}"
+					 oncomplete="PF('dialogAddplth').hide()">
+
+
+				</p:commandButton>
+			</h:form>
+		</p:dialog>
+
+<!-- - dialog   add planinig theorique -->
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="/template/MainContent.xhtml">
+
+	<ui:define name="Content">
+
+		<h:form id="employe">
+
+			<!-- WIDGET TABBED CONTENT -->
+
+			<div class="col-md-8">
+				<div class="widget">
+					<div class="widget-header-in">
+
+						<ul class="nav nav-tabs pull-right">
+							<li><button class="btn btn-default  btn-primary ">
+									<i class="fa fa-file-pdf-o"></i> Export to pdf
+								</button></li>
+							<li><button class="btn btn-default btn-primary ">
+									<i class="fa fa-print"></i> Print
+								</button></li>
+						</ul>
+
+						<ul class="nav nav-tabs">
+
+							<li class="active"><a href="#tab1" data-toggle="tab"><i
+									class="fa fa-user"></i><span>Planification</span></a></li>
+							
+						</ul>
+
+					</div>
+					<div class="widget-content">
+						<div class="tab-content no-padding">
+							<div class="tab-pane fade in active" id="tab1">
+							
+							
+							<pe:timeline id="timeline" value="#{customTimelineController.model}"  
+             editable="true" eventMargin="10" eventMarginAxis="0"  
+             locale="#{customTimelineController.locale}"  
+             start="#{customTimelineController.start}"  
+             end="#{customTimelineController.end}"  
+             showNavigation="true" showButtonNew="true"  
+             axisOnTop="true" stackEvents="false" themable="false"/>  
+              			
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- END WIDGET TABBED CONTENT -->
+			</div>
+				
+			
+		</h:form>
+
+     <h:form id="form2">
+			<div class="col-md-3">
+
+				<div class="widget widget-table">
+					<h:panelGrid id="Search">
+						<div class="widget-header">
+							<h3>
+								<i class="fa fa-users"></i>Liste des Employes
+							</h3>
+						</div>
+						<div class="widget-content">
+
+							<div class="input-group input-group-sm">
+
+								<h:form id="formSearch">
+									<h:outputLabel value="Matricule:" />
+									<p:inputText value="#{customTimelineController.matricule}"
+										onkeypress="if (event.keyCode == 13) {onchange(); return false; }">
+										<p:ajax event="change"
+											listener="#{customTimelineController.chercherEmployesByMatricule()}"
+											update=":form2:employes2" />
+									</p:inputText>
+									<p:commandButton icon="ui-icon-plus fa fa-plus"
+										onclick="PF('dialog1').show()" update=":formdialog1">
+									</p:commandButton>
+								</h:form>
+							</div>
+							<br />
+							<p:dataTable id="employes2"
+								value="#{customTimelineController.employesCherches}" var="emp"
+								selection="#{customTimelineController.identiteSelectionne}"
+								rowKey="#{emp.numedoss}" selectionMode="single">
+								<f:facet name="header">
+
+
+								</f:facet>
+								<p:ajax event="rowSelect"
+									listener="#{customTimelineController.selectEmploye()}" execute="@this"
+									update=":employe" />
+
+
+
+								<p:column style="width:40px">
+									<p:graphicImage value="#{customTimelineController.photoE}" cache="false"
+										id="dragImg" style="width:30px; height:40px;">
+										<f:param name="empid" value="#{emp.numedoss}" />
+										<p:draggable for="dragImg" revert="true" helper="clone" />
+									</p:graphicImage>
+								</p:column>
+								<p:column headerText="Matricule">
+									<h:outputText value="#{emp.matricul}" />
+								</p:column>
+								<p:column headerText="Nom">
+									<h:outputText value="#{emp.nom}" />
+								</p:column>
+								<p:column headerText="Prenom">
+									<h:outputText value="#{emp.prenom}" />
+								</p:column>
+
+
+							</p:dataTable>
+
+						</div>
+					</h:panelGrid>
+					<p:sticky target="Search" />
+				</div>
+
+			</div><h:form id="form2">
+			<div class="col-md-3">
+
+				<div class="widget widget-table">
+					<h:panelGrid id="Search">
+						<div class="widget-header">
+							<h3>
+								<i class="fa fa-users"></i>Liste des Employes
+							</h3>
+						</div>
+						<div class="widget-content">
+
+							<div class="input-group input-group-sm">
+
+								<h:form id="formSearch">
+									<h:outputLabel value="Matricule:" />
+									<p:inputText value="#{customTimelineController.matricule}"
+										onkeypress="if (event.keyCode == 13) {onchange(); return false; }">
+										<p:ajax event="change"
+											listener="#{customTimelineController.chercherEmployesByMatricule()}"
+											update=":form2:employes2" />
+									</p:inputText>
+									<p:commandButton icon="ui-icon-plus fa fa-plus"
+										onclick="PF('dialog1').show()" update=":formdialog1">
+									</p:commandButton>
+								</h:form>
+							</div>
+							<br />
+							<p:dataTable id="employes2"
+								value="#{customTimelineController.employesCherches}" var="emp"
+								selection="#{customTimelineController.identiteSelectionne}"
+								rowKey="#{emp.numedoss}" selectionMode="single">
+								<f:facet name="header">
+
+
+								</f:facet>
+								<p:ajax event="rowSelect"
+									listener="#{customTimelineController.selectEmploye()}" execute="@this"
+									update=":employe" />
+
+
+
+								<p:column style="width:40px">
+									<p:graphicImage value="#{customTimelineController.photoE}" cache="false"
+										id="dragImg" style="width:30px; height:40px;">
+										<f:param name="empid" value="#{emp.numedoss}" />
+										<p:draggable for="dragImg" revert="true" helper="clone" />
+									</p:graphicImage>
+								</p:column>
+								<p:column headerText="Matricule">
+									<h:outputText value="#{emp.matricul}" />
+								</p:column>
+								<p:column headerText="Nom">
+									<h:outputText value="#{emp.nom}" />
+								</p:column>
+								<p:column headerText="Prenom">
+									<h:outputText value="#{emp.prenom}" />
+								</p:column>
+
+
+							</p:dataTable>
+
+						</div>
+					</h:panelGrid>
+					<p:sticky target="Search" />
+				</div>
+
+			</div>
+
+
+		</h:form>
+
+
+		</h:form>
+
+
+		
+		<!-- Message -->
+
+		<p:dialog header="Message" widgetVar="msg1"
+			resizable="false" width="400" height="200">
+			<p:panel id="DialogMsg">
+			<h:form id="formMsg1">
+			<h:outputLabel value="L'embauche est enregistré avec succés" />
+							</h:form>
+							</p:panel>
+							</p:dialog>
+						
+		<!-- recherche avancée -->
+
+		<p:dialog header="Recherche Avancée" widgetVar="dialog1"
+			resizable="false" width="800" height="400">
+			<p:panel id="DialogSearch">
+			<h:form id="formdialog1">
+			 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+				<p:accordionPanel>
+					<p:tab title="Identite">
+
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Matricule:" />
+							<p:inputText value="#{customTimelineController.ra.numMatricule}" />
+
+							<h:outputLabel value="Nom:" />
+							<p:inputText value="#{customTimelineController.ra.nom}" />
+
+							<h:outputLabel value="Prenom:" />
+							<p:inputText value="#{customTimelineController.ra.prenom}" />
+
+							<h:outputLabel value="Sexe:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.sexe}" id="sexe">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItem itemLabel="Masculin" itemValue="M" />
+								<f:selectItem itemLabel="Feminin" itemValue="F" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Situation Familiale" />
+							<p:selectOneMenu id="st"
+								value="#{customTimelineController.ra.situationFamiliale}">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItem itemLabel="Célibataire" itemValue="cel" />
+								<f:selectItem itemLabel="Marié" itemValue="mar" />
+								<f:selectItem itemLabel="Divorcé" itemValue="div" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Nationalite" />
+			
+							<p:selectOneMenu value="#{customTimelineController.ra.nationalitePays}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_nationalitePays}" />
+							</p:selectOneMenu>
+								</h:panelGrid>
+									<h:panelGrid columns="2">
+				<h:outputLabel value="Age" />
+							<h:dataTable id="tbages"
+											value="#{customTimelineController.listIntervallesAge}" var="pi">
+<p:ajax event="keyup" />
+
+											<h:column headerText="De">
+												<p:inputText value="#{pi.minAge}" />
+											</h:column>
+											<h:column headerText="Jusqu'a">
+												<p:inputText value="#{pi.maxAge}" />
+											</h:column>
+											<h:column headerText="Action">
+												<h:commandButton value="Supprimer" >
+													<f:ajax
+														listener="#{customTimelineController.onButtonRemoveIntervalleAgeClick(pi)}"
+														ajax="true" immediate="true" execute="@form"
+														render="DialogSearch" />
+												</h:commandButton>
+											</h:column>
+										</h:dataTable>
+</h:panelGrid>
+										<h:commandButton  value="Ajouter">
+											<f:ajax listener="#{customTimelineController.onButtonAddIntervalleAgeClick}"
+												immediate="true" execute="@form" render="tbages" />
+										</h:commandButton>
+						
+					</p:tab>
+
+					<p:tab title="Pieces d'identité">
+						<h:panelGrid column="2">
+							<p:selectOneMenu id="typePiece"
+								value="#{customTimelineController.ra.typPieceIdentite}">
+								<f:selectItem itemLabel="Selectionnez" itemValue="" />
+								<f:selectItems value="#{customTimelineController.items_TypePieceIdentite}" />
+							</p:selectOneMenu>
+							<p:inputText value="#{customTimelineController.ra.valeurPieceIdentite}" />
+
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Contrats">
+						<h:panelGrid column="2">
+							<p:outputLabel value="Date d'embauche:" />
+							<h:dataTable id="tbdatesembauche"
+											value="#{customTimelineController.listIntervallesDateEmbauche}" var="pi">
+											<h:column>
+												<p:calendar value="#{pi.minDateEmbauche}" required="true" requiredMessage="Saisir la date minimum d'embauche"/>
+											</h:column>
+											<h:column>
+												<p:calendar value="#{pi.maxDateEmbauche}" required="true" requiredMessage="Saisir la date maximum d'embauche" />
+											</h:column>
+											<h:column>
+												<p:commandButton value="Supprimer" >
+													<f:ajax
+														listener="#{customTimelineController.onButtonRemoveIntervalleDateEmbaucheClick(pi)}"
+														ajax="true" immediate="true" execute="@form" 
+														render="DialogSearch" />
+												</p:commandButton>
+											</h:column>
+										</h:dataTable>
+</h:panelGrid>
+										<p:commandButton  value="Ajouter">
+											<f:ajax listener="#{customTimelineController.onButtonAddIntervalleDateEmbaucheClick}"
+												immediate="true" execute="@form" render="tbdatesembauche" />
+										</p:commandButton>
+									
+											<h:panelGrid columns="2">
+							<h:outputLabel value="Type de contrat:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.typeContrat}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_typeContrat}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Compétences">
+						<h:panelGrid column="2">
+							<h:outputLabel value="Niveau du Diplome:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.niveauDiplome}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_niveauDiplome}" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Nom de Certificat:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.typeCertificat}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_typeCertificat}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Experiences">
+						<h:panelGrid column="2">
+							<h:outputLabel value="Poste:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.experiencePoste}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_experiencePoste}" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Societé:" />
+							<p:selectOneMenu value="#{customTimelineController.ra.experienceSociete}"
+								effect="fold" editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_experienceSociete}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Affectation">
+						<h:panelGrid column="2">
+							<p:outputLabel value="Poste:" />
+
+							<p:selectOneMenu value="#{customTimelineController.ra.poste}" effect="fold"
+								editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_affectationPoste}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Emploi:" />
+
+							<p:selectOneMenu value="#{customTimelineController.ra.emploi}" effect="fold"
+								editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_affectationEmploi}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Unite Organisationnelle:" />
+
+							<p:selectOneMenu value="#{customTimelineController.ra.uniteOrg}" effect="fold"
+								editable="true">
+								<f:selectItem itemLabel="Selectionnez" itemValue="%" />
+								<f:selectItems value="#{customTimelineController.items_affectationUniteOrg}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+					</p:tab>
+				</p:accordionPanel>
+				<p:commandButton value="Chercher"
+					action="#{customTimelineController.chercherEmployes()}" ajax="true"
+					update=":form2:employes2" >
+				</p:commandButton>
+						<p:commandButton value="Memoriser"
+					action="#{customTimelineController.memoriser()}" ajax="true" 
+					update="formdialog1" />
+				
+				<p:commandButton value="Reset"
+					action="#{customTimelineController.resetSearch()}" ajax="true"
+					update="formdialog1" />
+
+
+			</h:form>
+			</p:panel>
+		</p:dialog>
+
+
+
+
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

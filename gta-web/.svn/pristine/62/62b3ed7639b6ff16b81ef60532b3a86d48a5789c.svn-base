@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/MainContent.xhtml">
+
+	<ui:define name="Content" id="newcontent">
+
+		<h:form id="form2" prependId="false">
+
+			<script
+				src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
+
+			<div class="col-md-8">
+				<div class="widget">
+					<div class="widget-header-in">
+
+						<ul class="nav nav-tabs pull-right">
+							<li><button class="btn btn-default  btn-primary ">
+									<i class="fa fa-file-pdf-o"></i> Export to pdf
+								</button></li>
+							<li><button class="btn btn-default btn-primary ">
+									<i class="fa fa-print"></i> Print
+								</button></li>
+						</ul>
+
+						<ul class="nav nav-tabs">
+
+							<li class="active"><a href="#tab1" data-toggle="tab"><i
+									class="fa fa-user"></i><span>Gestion Description journee
+										type</span></a></li>
+
+						</ul>
+
+					</div>
+
+					<div class="widget-content">
+						<div class="tab-content no-padding">
+
+							<!-- ////////// Debut
+												  Gestion Description journee type  ////////// -->
+							<div class="tab-pane fade in active" id="tab1">
+							
+							<!-- Journee Type DataTable -->
+							<div>
+									<p:outputPanel id="journeeTypePanel">
+										<p:dataTable
+											value="#{descJourneeTypeBean.journeeTypeList}" selectionMode="single"
+											var="journeeTypeList"  selection="#{descJourneeTypeBean.selectedJourneeType}" rowKey="#{journeeTypeList.idjt}" rowIndexVar="journeeTypeIndex"
+											id="journeeTypeDataTable">
+											
+									        <f:facet name="header">
+									            <h:outputText value="Journée Type" />
+									        </f:facet>
+									        
+									        
+									        <p:ajax event="rowSelect" listener="#{descJourneeTypeBean.onJTRowSelect}"
+									        	update=":form2:descJourneeTypes" />
+
+											<p:column headerText="ID">
+												<h:outputText value="#{journeeTypeList.idjt}" />
+											</p:column>
+											<p:column headerText="Code">
+												<h:outputText value="#{journeeTypeList.codejt}" />
+											</p:column>
+											
+											<p:column headerText="Poids">
+												<h:outputText value="#{journeeTypeList.poids}" />
+											</p:column>
+											<p:column headerText="Type Journée">
+												<h:outputText value="#{journeeTypeList.typeJournee}" />
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</div>
+
+								<p:outputPanel id="descJourneeTypesPanel">
+
+									<p:dataTable value="#{descJourneeTypeBean.descJourneeTypeList}" id="descJourneeTypes"
+										rowKey="#{descJourneeTypes.descJourneeType != null ? descJourneeTypes.descJourneeType.id : null}"
+										var="descJourneeTypes" selection="#{descJourneeTypeBean.selectedDescJourneeType}" selectionMode="single"
+										rowIndexVar="descJourneeTypeIndex">
+
+
+										<f:facet name="header">
+										<br/>
+										
+<h:outputText value="Description Journée Type" />
+<br/>
+<br/>
+										
+
+											<p:commandButton icon="ui-icon-plus"
+												onclick="PF('DialogDescJourneeType').show();"
+												actionListener="#{descJourneeTypeBean.addDescJourneeType()}"
+												update=":formDialogDescJourneeType" />
+
+											<p:commandButton icon="ui-icon-pencil"
+												
+												
+											 />
+
+											<p:commandButton icon="ui-icon-trash"
+												actionListener="#{descJourneeTypeBean.removeDescJourneeType}"
+												update=":form2:descJourneeTypes" />
+
+
+
+
+										</f:facet>
+
+
+
+
+										<p:column headerText="id">
+											<h:outputText value="#{descJourneeTypes.descJourneeType.id}" />
+
+										</p:column>
+										<p:column headerText="Date d'effet">
+											<h:outputText
+												value="#{descJourneeTypes.descJourneeType.dateEffet}" />
+
+										</p:column>
+										<p:column headerText="Date de Fin">
+											<h:outputText
+												value="#{descJourneeTypes.descJourneeType.dateFin}" />
+
+										</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END WIDGET TABBED CONTENT -->
+			</div>
+
+		</h:form>
+
+		<!-- ***************************   POPUPS OF Gestion Description journee type   ********************************** -->
+
+
+
+
+		<!-- //////////   
+							Popup d'ajout d'une  Description journee type  ////////// -->
+
+		<p:dialog header="Description journee type"
+			widgetVar="DialogDescJourneeType" id="DialogDescJourneeType"
+			modal="true" height="500px"    >
+
+			<h:form id="formDialogDescJourneeType">
+
+				<h:panelGrid columns="2" cellpadding="10"
+					id="gridDescJourneeType">
+
+					<p:outputLabel value="Date d'effet" for="dateEffetCreate" />
+
+					<p:calendar id="dateEffetCreate"
+						value="#{descJourneeTypeBean.descJourneeTypeModel.descJourneeType.dateEffet}"
+							showOn="button"/>
+
+					<!-- Plage Horaire -->
+
+
+					<div>
+						<p:outputPanel id="plageHorairePanel">
+						<br />
+						
+						<h4>Liste Plages Horaire</h4>
+<label></label>
+<br />
+							<p:commandButton value="+"
+								actionListener="#{descJourneeTypeBean.addPlageHoraireDescJt()}"
+								update="plageHoraireDataTable" />
+
+							<p:dataTable value="#{descJourneeTypeBean.plageHoraireDesJtList}"
+								var="plageHorairesDescJt" rowIndexVar="plageHoraireIndex"
+								id="plageHoraireDataTable">
+
+								<p:column headerText="Heure Plage Horaire">
+
+									<p:calendar value="#{plageHorairesDescJt.heure}"
+										pattern="HH:mm a" timeOnly="true" />
+								</p:column>
+
+								<p:column headerText="Plage Horaire">
+									<p:selectOneMenu
+										value="#{plageHorairesDescJt.plageHoraire.idph}">
+										<f:selectItem itemValue="-1" itemLabel="Selectionner"></f:selectItem>
+										<f:selectItems value="#{descJourneeTypeBean.plageHoraires}"
+											var="plageHoraires" itemValue="#{plageHoraires.idph}"
+											itemLabel="#{plageHoraires.codeph}" />
+										<p:ajax event="change" listener="#{descJourneeTypeBean.getLibelleListByPlageHoraire(plageHorairesDescJt.plageHoraire.idph)}"
+											update="libPlageHoraire" />
+									</p:selectOneMenu>
+								</p:column>
+
+								<p:column headerText="libelle">
+									<p:outputPanel id="libPlageHoraire">
+										<h:outputText value="#{descJourneeTypeBean.selectedLibelle.lib}" />
+									</p:outputPanel>
+								</p:column>
+
+							</p:dataTable>
+						</p:outputPanel>
+					</div>
+
+					<div>
+						<p:outputPanel id="refAbscencePanel">
+						<br />
+						
+						<h4>Horaires de référence en cas d'absence </h4>
+<label></label> 
+<br />
+							<p:commandButton value="+"
+								actionListener="#{descJourneeTypeBean.addRefAbscence()}"
+								update="refAbscenceDataTable" />
+
+							<p:dataTable value="#{descJourneeTypeBean.refAbscences}"
+								var="refAbscences" rowIndexVar="refAbscenceIndex"
+								id="refAbscenceDataTable">
+								
+									<p:column headerText="Numéro tranche">
+
+									<h:outputText value="#{refAbscenceIndex+1}" />
+									
+									
+							     	</p:column>
+								
+								
+								
+								
+								<p:column headerText="Heure de début">
+
+									<p:calendar value="#{refAbscences.heureDeb}" pattern="HH:mm a"
+										timeOnly="true" />
+								</p:column>
+
+								<p:column headerText="Heure de fin">
+
+									<p:calendar value="#{refAbscences.heureFin}" pattern="HH:mm a"
+										timeOnly="true" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</div>
+
+					<div>
+						<p:outputPanel id="refPointagePanel">
+						<br />
+						
+						<h4>Horaires de référence en cas de pointage</h4>
+<label> </label> 
+<br />
+							<p:commandButton value="+"
+								actionListener="#{descJourneeTypeBean.addRefPointage()}"
+								update="refPointageDataTable" />
+
+							<p:dataTable value="#{descJourneeTypeBean.refPointages}"
+								var="refPointages" rowIndexVar="refPointagesIndex"
+								id="refPointageDataTable">
+								<p:column headerText="Heure">
+
+									<p:calendar value="#{refPointages.heurePointage}"
+										pattern="HH:mm a" timeOnly="true" />
+								</p:column>
+
+								<p:column headerText="Tolerance inférieur">
+
+									<p:calendar value="#{refPointages.heureInf}" pattern="HH:mm a"
+										timeOnly="true" />
+								</p:column>
+								<p:column headerText="Tolerance supérieur">
+
+									<p:calendar value="#{refPointages.heureSup}" pattern="HH:mm a"
+										timeOnly="true" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</div>
+
+					<p:commandButton id="saveDescJourneeType" value="Save"
+						actionListener="#{descJourneeTypeBean.saveDesJourneeType}"
+						oncomplete="PF('DialogDescJourneeType').hide();"
+						update=":form2:descJourneeTypes" />
+
+
+				</h:panelGrid>
+				<br />
+
+			</h:form>
+		</p:dialog>
+
+		<!-- ////////// 
+							Popup de modification d'une  Description journee type ////////// -->
+
+		<p:dialog header="Modification de la Gestion Description journee type"
+			widgetVar="DialogEditActPre" modal="true" height="400px">
+			<h:form id="formDialogEditActPre">
+				<h:panelGrid columns="2" cellpadding="10">
+
+
+				</h:panelGrid>
+				<br />
+
+			</h:form>
+		</p:dialog>
+
+
+		<!-- ////////// 
+							Popup de supprimer d'une  Description journee type ////////// -->
+
+		<p:dialog header="supprimer  Description journee type"
+			widgetVar="DialogDeleatActPre" modal="true" height="200px">
+			<h:form id="formDialogDeleatActPre">
+				<h:panelGrid columns="2" cellpadding="10">
+                    <p:outputLabel value="Code" />
+					
+						
+						<br />
+				<p:commandButton value="Supprimer" update=":form2:descJourneeTypes"
+					action="#{descJourneeTypeBean.removeDescJourneeType()}"
+					oncomplete="PF('DialogDeleatActPre').hide()" />
+					
+				</h:panelGrid>
+				<br />
+
+			</h:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+</ui:composition>
+</html>

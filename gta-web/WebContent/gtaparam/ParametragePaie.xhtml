@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="/template/MainContent.xhtml">
+	<ui:define name="Content">
+		<div class="col-lg-8">
+			<div>
+				<h:form id="form">
+
+
+					<p:messages id="messages" showDetail="true" autoUpdate="true"
+						closable="true" />
+
+				</h:form>
+
+				<h:form id="form1">
+
+
+
+					<h:panelGrid columns="5" style="margin-right: 200px;">
+						<p:outputLabel value="Filtre" />
+
+						<p:commandButton value="Mois" />
+						<p:commandButton value="Exercice" type="button" />
+						<p:calendar placeholder="De" />
+						<p:calendar placeholder="À" />
+
+					</h:panelGrid>
+					<br />
+
+					<!-- WIDGET TABBED CONTENT -->
+
+
+				</h:form>
+				<div class="col-md-8">
+					<p:panel id="journeetypepanel">
+
+						<p:dataTable id="journeetable">
+
+							<f:facet name="header">
+								<h:outputText value="Element fixe" />
+
+								<br />
+
+								<p:commandButton icon="ui-icon-zoomin"></p:commandButton>
+
+								<p:commandButton icon="ui-icon-pencil"
+									onclick="PF('DialogModifJourneeType').show()"></p:commandButton>
+
+								<p:commandButton icon="ui-icon-plus"
+									onclick="PF('DialogAjoutJourneType').show()"></p:commandButton>
+
+								<p:commandButton icon="ui-icon-trash" ajax="true"
+									action="#{journeeTypeBean.supprimerJourneeType}"></p:commandButton>
+							</f:facet>
+
+							<p:column headerText="Code">
+								<h:outputText value="#{journeeTypeList.codejt}" />
+							</p:column>
+
+                              	<p:column headerText="Libellé">
+								<h:outputText
+									value="#{!empty journeeTypeList.libelles ? journeeTypeList.libelles.get(0).lib : ''}" />
+							</p:column>
+							
+							
+							 <p:column headerText="Valeur">
+									<h:outputText
+										value="#{descJourneeTypes.descJourneeType.dateEffet}" />
+
+								</p:column>
+							
+							
+							
+						</p:dataTable>
+
+						<br />
+						<br />
+						<p:outputPanel id="descJourneeTypesPanel">
+
+							<p:dataTable value="#{journeeTypeBean.descJourneeTypeList}"
+								id="descJourneeTypes"
+								sortBy="#{descJourneeTypes.descJourneeType.id}"
+								rowKey="#{descJourneeTypes.descJourneeType != null ? descJourneeTypes.descJourneeType.id : null}"
+								var="descJourneeTypes"
+								selection="#{journeeTypeBean.selectedDescJourneeType}"
+								selectionMode="single" rowIndexVar="descJourneeTypeIndex">
+
+
+								<f:facet name="header">
+
+
+									<h:outputText value="Element Variable" />
+
+									<br />
+
+									<p:commandButton icon="ui-icon-plus"
+										onclick="PF('DialogDescJourneeType').show();"
+										actionListener="#{journeeTypeBean.addDescJourneeType()}" />
+
+									<p:commandButton icon="ui-icon-pencil"
+										actionListener="#{journeeTypeBean.initToUpdateDescJT}"
+										onsuccess="PF('DialogEditActPre').show();" />
+
+									<p:commandButton icon="ui-icon-trash"
+										actionListener="#{journeeTypeBean.removeDescJourneeType}" />
+
+									<p:ajax event="rowSelect"
+										listener="#{journeeTypeBean.onDescJTRowSelect}" />
+
+								</f:facet>
+
+
+
+
+								<p:column headerText="Code">
+									<h:outputText value="#{descJourneeTypes.descJourneeType.id}" />
+
+								</p:column>
+								<p:column headerText="Libellé">
+									<h:outputText
+										value="#{descJourneeTypes.descJourneeType.dateEffet}" />
+
+								</p:column>
+
+                                <p:column headerText="Valeur">
+									<h:outputText
+										value="#{descJourneeTypes.descJourneeType.dateEffet}" />
+
+								</p:column>
+
+
+
+
+							</p:dataTable>
+
+
+							<br />
+                            <br /> 
+							<p:commandButton value="Sauvgarder"></p:commandButton>
+						</p:outputPanel>
+
+					</p:panel>
+
+
+				</div>
+			</div>
+
+
+
+
+
+
+			<!-- ////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+			<!-- WIDGET TABBED CONTENT -->
+
+
+
+
+
+
+
+
+		</div>
+		<div class="col-lg-4">
+			<div>
+				<h:form id="form2">
+					<div class="widget widget-table">
+						<div class="widget-header">
+							<h3>
+								<i class="fa fa-users"></i>Liste des collaborteurs
+							</h3>
+						</div>
+						<div class="widget-content">
+
+							<div class="input-group input-group-sm">
+								<h:form id="formSearch">
+									<h:outputLabel value="Matricule:" />
+									<p:inputText value="#{activiteCalculerBean.matricul}"
+										onkeypress="if (event.keyCode == 13) {onchange(); return false; }">
+										<p:ajax event="change"
+											listener="#{activiteCalculerBean.chargerCollaborateurs()}"
+											update=":form2:eventsDT" />
+									</p:inputText>
+
+								</h:form>
+							</div>
+							<br />
+
+
+
+
+							<p:dataTable id="eventsDT" var="identite"
+								value="#{activiteCalculerBean.identites}" selectionMode="single"
+								selection="#{activiteCalculerBean.selectedIdentite}"
+								rowKey="#{identite.numedoss}">
+
+								<f:facet name="header"> Liste des employés </f:facet>
+								<p:ajax event="rowSelect"
+									listener="#{activiteCalculerBean.onRowSelect}" update=":form1" />
+
+
+
+								<p:column headerText="Matricule">
+									<h:outputText value="#{identite.matricul}" />
+								</p:column>
+								<p:column headerText="Nom et Prénom">
+									<h:outputText value="#{identite.nom} #{identite.prenom}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+
+					</div>
+				</h:form>
+			</div>
+
+
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- 			//////////////////////////////////////////////////////////////////////////////////////////////////////////  -->
+
+
+
+	</ui:define>
+</ui:composition>
+</html>
